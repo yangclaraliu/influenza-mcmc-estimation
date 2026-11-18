@@ -34,7 +34,7 @@ not fix this.
    school has the same size, network structure and introduction curve. Only
    the vaccination rates differ. The model therefore has few features of
    the data that respond differently to the two parameters.
-4. **The comparison may not use all the information in the data.** Step 3
+4. **The comparison may not use all the information in the data.** Step 4
    below is designed to check this.
 
 ### An illustration
@@ -64,16 +64,48 @@ The aim is not to make the chains look better, but to find out whether the
 data can separate the two parameters and, if not, what extra information
 could. The steps below are ordered to answer that.
 
-## 1. Review the two new commits
+## 1. Review and merge the new commits
+
+These commits are on the `main` branch of
+<https://github.com/yangclaraliu/influenza-mcmc-estimation>. Please review
+them, then bring them into your repository, for example with
+`git pull https://github.com/yangclaraliu/influenza-mcmc-estimation main`.
 
 - **Direct-introduction fix** (`1efdfd4`). Direct community introductions
   were drawn only from susceptible students, so vaccination coverage had no
   effect on that route. They now target any student, and only susceptible
   students become infected. Please check that you agree with the change.
-- **`meta_parameters.md`** (`ae04c69`). Your explanation of the contact
-  probabilities, plus sections for you to complete.
+- **`meta_parameters.md`** (`ae04c69`, expanded in `7a9ce3e`). Your
+  explanation of the contact probabilities, plus sections for you to
+  complete.
+- **`next_steps.md`** (`7a9ce3e`). This document.
 
-## 2. Complete `meta_parameters.md`
+## 2. Upload the full analysis
+
+The repository currently holds only the estimation script, so it is hard to
+see how the results you showed were produced. Please add everything else
+that is part of the analysis, for example:
+
+- The scripts that produce the trace plots and other figures. The
+  estimation script deletes `*_diagnostics.png` files, but nothing in the
+  repository creates them.
+- The school-specific launchers that call `main(forced_schools=...)` or
+  `use_truncated_exponential_household_prior()`, which the script refers to.
+- The settings used for the runs behind the trace plots (iterations,
+  replicates, calibration draws, seeds), and the outputs from those runs
+  (CSV summaries and figures).
+- Any earlier versions or exploratory scripts that the current results
+  depend on.
+
+The `.gitignore` file ignores everything that is not explicitly listed, so
+add each new file or folder to it.
+
+**Do not upload data.** If any file contains or is derived from the
+individual-level school data (including intermediate outputs at the student
+level), do not put it on GitHub. Let me know, and I will set up a Dropbox
+folder for those files.
+
+## 3. Complete `meta_parameters.md`
 
 Complete every section marked **To be completed** (§2–§8), and confirm the
 open points in §1. Each section describes what the code currently does and
@@ -86,7 +118,7 @@ lists the questions to answer. The most important for the fit are:
 If any value cannot be sourced, note it. It then becomes a candidate for a
 sensitivity check.
 
-## 3. Diagnostic run (before changing the fitting code)
+## 4. Diagnostic run (before changing the fitting code)
 
 Run the simulator on a grid of parameter values with your data:
 `household_beta` from 0 to 1 in steps of 0.1, and `school_beta` from 0 to
@@ -109,7 +141,7 @@ Questions to think about:
 Bring both plots to our next meeting. We will decide the changes to the
 fitting code together, based on what they show.
 
-## 4. Sensitivity check: fixed versus changing contacts
+## 5. Sensitivity check: fixed versus changing contacts
 
 The current network keeps the same contacts for the whole season. As a
 robustness check, add an option in which each infectious student's contacts

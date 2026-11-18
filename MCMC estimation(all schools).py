@@ -290,7 +290,6 @@ def generate_external_introductions(
     if maximum_rate <= 0:
         return household_events, student_events
 
-    susceptible_students = np.flatnonzero(susceptible)
     family_target_probability = family_members / family_members.sum()
     time = 0.0
     while True:
@@ -307,8 +306,10 @@ def generate_external_introductions(
             continue
 
         day = min(int(time), DAYS - 1)
-        if rng.random() <= student_fraction[day] and len(susceptible_students):
-            target = rng.choice(susceptible_students)
+        if rng.random() <= student_fraction[day]:
+            # Target any student; run_sir infects only susceptible ones, so
+            # introductions reaching immune or vaccine-protected students fail.
+            target = rng.integers(total_students)
             student_events[target, day] = True
         else:
             target = rng.choice(total_students, p=family_target_probability)
